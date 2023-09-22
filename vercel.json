@@ -2,6 +2,7 @@
     "version": 2,
     "builds": [
       { "src": "*.html", "use": "@vercel/static" },
+      { "src": "api/module/*.py", "use": "@vercel/python" },
       { "src": "api/*.py", "use": "@vercel/python" }
     ],
     "routes": [
@@ -9,7 +10,6 @@
       { "src": "/api/choice", "dest": "/api/choice.py" },
       { "src": "/api/event", "dest": "/api/event.py" },
       { "src": "/api/start", "dest": "/api/start.py" },
-      { "src": "api/module/*.py", "use": "@vercel/python" },
       { "src": "/(.*)", "status": 404, "dest": "/404.html" }
       
     ]
