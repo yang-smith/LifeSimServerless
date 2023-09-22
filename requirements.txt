@@ -3,3 +3,5 @@ openai==0.27.8
 dataclasses-json==0.5.7
 tiktoken
 langchain
+flask
+flask_cors

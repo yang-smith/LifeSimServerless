@@ -1,14 +1,18 @@
 from http.server import BaseHTTPRequestHandler
 from api.state import Player
-import json
+from flask import Flask, jsonify, request
+from flask_cors import CORS  # 新增CORS
 from api.ai import AI
 from api.db import DB, DBs
 from pathlib import Path
 
+app = Flask(__name__)
+CORS(app)  # 允许跨域请求
+
 # 初始化AI、DB等
 ai = AI(
-    model_name="gpt-3.5-turbo-16k",
-    temperature=0.1,
+    model_name = "gpt-3.5-turbo-16k",
+    temperature = 0.1,
 )
 
 input_path = Path("projects/example").absolute()
@@ -24,28 +28,39 @@ dbs = DBs(
     archive=DB(archive_path),
 )
 
+@app.route('/start', methods=['GET'])
+def start():
+    player = Player()
+    if player.age < 5:
+        player.birth_event(ai, dbs)
+    return jsonify(player=player.to_dict(), event_description=player.experiences[-1])
 
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        try:
-            player = Player()
-            if player.age < 5:
-                player.birth_event(ai, dbs)
-            response = {
-                "player": player.to_dict(),
-                "event_description": player.experiences[-1]
-            }
-            self._send_response(200, response)
-        except Exception as e:
-            error_response = {
-                "error": "An error occurred.",
-                "detail": str(e)
-            }
-            self._send_response(500, error_response)
+@app.route('/choice', methods=['POST'])
+def handle_event():
+    data = request.json
+    if 'player' not in data:
+        return jsonify(error="Player data not provided"), 400
+    if 'choice' not in data:
+        return jsonify(error="Choice data not provided"), 400
+    player = Player.from_dict(data['player'])  # 从请求体获取玩家状态
+    choice = data['choice']
+    update =  player.undergo_event(ai, dbs, choice)
+    
+    return jsonify(player=player.to_dict(), event_description=player.experiences[-1], update=update)
 
-    def _send_response(self, status_code, content):
-        self.send_response(status_code)
-        self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')  # Add CORS header
-        self.end_headers()
-        self.wfile.write(json.dumps(content).encode())
+@app.route('/continue', methods=['POST'])
+def gen_event():
+    data = request.json
+    if 'player' not in data:
+        return jsonify(error="Player data not provided"), 400
+    player = Player.from_dict(data['player'])  # 从请求体获取玩家状态
+    player.age += 10
+    status = player.check_status(ai, dbs)
+    if status < 0:
+        return jsonify(game_over=True, player=player.to_dict(), event_description=player.experiences[-1])
+    player.event_gen(ai, dbs)
+    
+    return jsonify(player=player.to_dict(), event_description=player.experiences[-1])
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
