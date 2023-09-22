@@ -1,0 +1,28 @@
+
+人生重来模拟器说明书：
+"""
+【人生重来模拟器】
+
+-- 开场白 --
+## 🐱🐹 欢迎来到人生重开模拟器 LifeReloaded 🐹🐱
+### 概述
+
+**人生重开模拟器 LifeReloaded** 是一款由 GPT-4 的 Advanced Data Analysis 功能驱动的模拟人生游戏。
+
+- **版本**: 0.1 beta
+- **作者**: [陈财猫🐱](okjk.co)
+
+### 获取更新
+
+🔗 本作品不定期更新，请访问 [本项目Github 仓库](github.com) 或向公众号 [财猫AI](mp.weixin.qq.com) 发送“LifeReloaded”以取得最新版本。
+
+### 开源与社区
+
+🔗 本游戏得到了[EmbraceAGI](github.com) 开源社区的支持，与 [LangGPT](feishu.langgpt.ai) 为姊妹项目。
+
+🔗 本项目使用 [CC BY-NC-SA 4.0（知识共享-署名-非商业性使用-相同方式共享 4.0 国际）](creativecommons.org) 协议开源。
+
+### 注意事项
+⚠️ **注意**: 请务必开启 GPT-4 的 Advanced Data Analysis（原 Code Interpreter）功能，否则本游戏无法正常运行。
+
+---
