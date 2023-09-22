@@ -1,8 +1,8 @@
 from http.server import BaseHTTPRequestHandler
 from api.module.state import Player
 import json
-from module.ai import AI
-from module.db import DB, DBs
+from api.module.ai import AI
+from api.module.db import DB, DBs
 from pathlib import Path
 
 ai = AI(
